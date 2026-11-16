@@ -1,13 +1,28 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { GeminiError, GeminiTimeoutError } from "./gemini";
 
 let client: Anthropic | null = null;
 
+export type AiProvider = "anthropic" | "gemini";
+
+/**
+ * Which model provider answers. AI_PROVIDER wins; without it, Anthropic is used when its key
+ * is set, otherwise Gemini when GEMINI_API_KEY is set.
+ */
+export function aiProvider(): AiProvider {
+  const set = process.env.AI_PROVIDER?.trim().toLowerCase();
+  if (set === "gemini" || set === "anthropic") return set;
+  if (!process.env.ANTHROPIC_API_KEY && process.env.GEMINI_API_KEY) return "gemini";
+  return "anthropic";
+}
+
 export function aiModel(): string {
+  if (aiProvider() === "gemini") return process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest";
   return process.env.ANTHROPIC_MODEL?.trim() || "claude-haiku-5-5";
 }
 
 export function aiConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return Boolean(aiProvider() === "gemini" ? process.env.GEMINI_API_KEY : process.env.ANTHROPIC_API_KEY);
 }
 
 /** Canned responses for local UI work. Never active in production builds. */
@@ -28,6 +43,8 @@ export function isTransportError(err: unknown): boolean {
   return (
     err instanceof Anthropic.APIError ||
     err instanceof Anthropic.APIConnectionError ||
+    err instanceof GeminiError ||
+    err instanceof GeminiTimeoutError ||
     (err instanceof Error && err.name === "AbortError")
   );
 }

@@ -1,5 +1,7 @@
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import { aiConfigured, aiMock, aiModel, getAnthropic, isTransportError } from "./client";
+import { z } from "zod";
+import { aiConfigured, aiMock, aiModel, aiProvider, getAnthropic, isTransportError } from "./client";
+import { geminiJson } from "./gemini";
 import { detectEmergency, type EmergencyResult } from "./emergency";
 import { keywordRoute } from "./keyword-router";
 import { detectLanguage, type ReplyLanguage } from "./language";
@@ -29,7 +31,23 @@ export type RouterModelCall = (input: {
   signal?: AbortSignal;
 }) => Promise<unknown>;
 
+let routerJsonSchema: Record<string, unknown> | null = null;
+
 export const callRouterModel: RouterModelCall = async ({ text, lang, clarifications, signal }) => {
+  if (aiProvider() === "gemini") {
+    if (!routerJsonSchema) {
+      const { $schema: _drop, ...schema } = z.toJSONSchema(RouterApiSchema) as Record<string, unknown>;
+      routerJsonSchema = schema;
+    }
+    return geminiJson({
+      model: aiModel(),
+      system: ROUTER_SYSTEM,
+      user: routerUserMessage(text, lang, clarifications),
+      schema: routerJsonSchema,
+      signal,
+      timeoutMs: 15_000,
+    });
+  }
   const response = await getAnthropic().messages.parse(
     {
       model: aiModel(),

@@ -1,5 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk";
-import { aiConfigured, aiMock, aiModel, getAnthropic } from "./client";
+import { aiConfigured, aiMock, aiModel, aiProvider, getAnthropic } from "./client";
+import { geminiStream, type GeminiFinal, type GeminiPart } from "./gemini";
 import { MarkerFilter } from "./marker";
 import { EXPLAINER_SYSTEM, explainerUserText, type Clarification } from "./prompts";
 import { detectLanguage, type ReplyLanguage } from "./language";
@@ -51,6 +52,38 @@ function buildMessages(input: ExplainInput, topics: SeriousTopic[], lang: ReplyL
     });
   }
   return messages;
+}
+
+/** Same request for Gemini: the server check goes into the system instruction instead. */
+function geminiRequest(input: ExplainInput, topics: SeriousTopic[], lang: ReplyLanguage): { system: string; parts: GeminiPart[] } {
+  const parts: GeminiPart[] = [];
+  if (input.image) parts.push({ inlineData: { mimeType: input.image.mediaType, data: input.image.data } });
+  parts.push({
+    text: explainerUserText({ lang, prescription: input.prescription, hasImage: Boolean(input.image), question: input.question, history: input.history }),
+  });
+  const system =
+    topics.length > 0
+      ? `${EXPLAINER_SYSTEM}\n\nServer check: the patient's question touches: ${topics.join(", ")}. Do not answer the medical substance of that part. Kindly say this needs their doctor and end with the marker.`
+      : EXPLAINER_SYSTEM;
+  return { system, parts };
+}
+
+/** Streams the Gemini answer through the same marker filter and returns the final status. */
+async function* streamGemini(
+  input: ExplainInput,
+  topics: SeriousTopic[],
+  lang: ReplyLanguage,
+  filter: MarkerFilter,
+  signal: AbortSignal | undefined,
+): AsyncGenerator<string, GeminiFinal> {
+  const { system, parts } = geminiRequest(input, topics, lang);
+  const gen = geminiStream({ model: aiModel(), system, parts, maxOutputTokens: 1500, signal, timeoutMs: 30_000 });
+  for (;;) {
+    const step = await gen.next();
+    if (step.done) return step.value;
+    const out = filter.push(step.value);
+    if (out) yield out;
+  }
 }
 
 const MOCK: Record<Locale, string> = {
@@ -131,6 +164,45 @@ export async function* explain(input: ExplainInput, signal?: AbortSignal): Async
   const filter = new MarkerFilter();
   let full = "";
   try {
+    if (aiProvider() === "gemini") {
+      const gen = streamGemini(input, topics, lang, filter, signal);
+      let final: GeminiFinal;
+      for (;;) {
+        const step = await gen.next();
+        if (step.done) {
+          final = step.value;
+          break;
+        }
+        full += step.value;
+        yield { t: "d", v: step.value };
+      }
+      const rest = filter.flush();
+      if (rest) {
+        full += rest;
+        yield { t: "d", v: rest };
+      }
+      logEvent("ai.explain", {
+        ms: Date.now() - started,
+        model: final.model,
+        stop: final.finishReason,
+        in: final.inputTokens,
+        out: final.outputTokens,
+        image: Boolean(input.image),
+      });
+      if (final.blocked && !full.trim()) {
+        yield { t: "error", code: "refused" };
+        return;
+      }
+      if (final.finishReason === "MAX_TOKENS") {
+        full += "…";
+        yield { t: "d", v: "…" };
+      }
+      const needsDoctor = filter.found || topics.length > 0 || emergency;
+      if (full.trim()) cache.set(key, { text: full, needsDoctor: filter.found });
+      yield { t: "meta", needsDoctor, topics, emergency };
+      yield { t: "end" };
+      return;
+    }
     const stream = getAnthropic().messages.stream(
       {
         model: aiModel(),

@@ -82,6 +82,9 @@ Open http://localhost:3000 and use **Kirish → Demo bemor / Demo shifokor**.
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | for Google | OAuth client (Web application). |
 | `ANTHROPIC_API_KEY` | for AI | Server-side only. |
 | `ANTHROPIC_MODEL` | optional | Default `claude-haiku-5-5`. |
+| `AI_PROVIDER` | optional | `gemini` or `anthropic`. Empty: Anthropic if `ANTHROPIC_API_KEY` is set, otherwise Gemini. |
+| `GEMINI_API_KEY` | for AI (Gemini) | Google AI Studio key, server-side only. Free tier works. |
+| `GEMINI_MODEL` | optional | One model or a comma-separated fallback list. Default `gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest`. |
 | `AI_DAILY_LIMIT` | optional | Global AI calls per day (cost circuit breaker), default 3000. |
 | `DEMO_MODE` | optional | `false` disables demo logins. |
 | `CRON_SECRET` | prod | Protects `/api/cron/maintain` (Vercel Cron sends it as a Bearer token). |
@@ -100,7 +103,7 @@ Never commit `.env.local`; it is git-ignored. Secrets are read only on the serve
    ```
    Tables live in a private schema `hs` that Supabase's REST API does not expose; RLS is enabled on every table anyway.
 3. **Google OAuth.** See below. Add `https://<your-app>.vercel.app/api/auth/google/callback` as a redirect URI.
-4. **Vercel.** Import the repo (or run `npx vercel` from this folder), then set the environment variables from the table above (`APP_URL`, `DATABASE_URL`, `DATABASE_SSL`, `SESSION_SECRET`, `GOOGLE_*`, `ANTHROPIC_API_KEY`, `CRON_SECRET`). Deploy.
+4. **Vercel.** Import the repo (or run `npx vercel` from this folder), then set the environment variables from the table above (`APP_URL`, `DATABASE_URL`, `DATABASE_SSL`, `SESSION_SECRET`, `GOOGLE_*`, `AI_PROVIDER` + `GEMINI_API_KEY` or `ANTHROPIC_API_KEY`, `CRON_SECRET`). Deploy.
 5. Optionally set the function region next to the database (*Project → Settings → Functions → Region*).
 6. `vercel.json` registers a daily cron (`/api/cron/maintain`) that tops up 14 days of slots, deletes expired sessions and removes demo patients older than 3 days.
 
