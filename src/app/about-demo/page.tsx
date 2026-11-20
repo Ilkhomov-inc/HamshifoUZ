@@ -37,7 +37,7 @@ export default async function AboutDemoPage() {
   const A = t.about;
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <h1 className="text-4xl font-semibold tracking-tight">{A.title}</h1>
+      <h1 className="text-3xl font-semibold tracking-tight hyphens-auto sm:text-4xl">{A.title}</h1>
       <p className="mt-4 text-lg leading-relaxed text-ink-2">{A.intro}</p>
 
       <Card className="reveal mt-8 border-brand-200 bg-brand-50/50 p-6">

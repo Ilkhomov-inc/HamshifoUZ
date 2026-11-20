@@ -32,21 +32,40 @@ function ApptCard({ a, t, compact = false }: { a: AppointmentView; t: Dict; comp
         a.status === "completed" && "opacity-75",
       )}
     >
-      <div className="flex items-start gap-3">
-        <span className={cn("font-semibold tabular-nums text-ink", compact ? "text-sm" : "w-14 text-base")}>{formatTime(a.startsAt)}</span>
-        <div className="min-w-0 flex-1">
+      <div className={cn("flex min-w-0 items-start", compact ? "flex-col gap-1" : "gap-3")}>
+        {compact ? (
+          <div className="flex w-full items-center justify-between gap-2">
+            <span className="text-sm font-semibold tabular-nums text-ink">{formatTime(a.startsAt)}</span>
+            <Badge tone={statusTone[a.status]} className="min-w-0">
+              <span className="truncate">{t.status[a.status]}</span>
+            </Badge>
+          </div>
+        ) : (
+          <span className="w-14 shrink-0 text-base font-semibold tabular-nums text-ink">{formatTime(a.startsAt)}</span>
+        )}
+        <div className="w-full min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="truncate font-semibold text-ink">{a.patientName}</span>
-            <Badge tone={statusTone[a.status]}>{t.status[a.status]}</Badge>
+            <span className={cn("min-w-0 font-semibold text-ink", compact ? "line-clamp-2 text-sm wrap-anywhere" : "truncate")} title={a.patientName}>
+              {a.patientName}
+            </span>
+            {!compact && <Badge tone={statusTone[a.status]}>{t.status[a.status]}</Badge>}
           </div>
           {!compact && <p className="text-[13px] text-muted tabular-nums">{formatPhone(a.patientPhone)}</p>}
-          <p className={cn("mt-1.5 text-sm text-ink-2", compact ? "line-clamp-2" : "line-clamp-2")}>{a.symptoms || <span className="text-muted italic">{t.doctor.noSymptoms}</span>}</p>
+          <p className={cn("mt-1.5 text-sm wrap-anywhere text-ink-2", compact ? "line-clamp-2" : "line-clamp-3")}>{a.symptoms || <span className="text-muted italic">{t.doctor.noSymptoms}</span>}</p>
           {a.aiSpecialty && (
             <p className="mt-2 flex flex-wrap items-center gap-1.5">
-              <Badge tone="brand">
-                <Sparkles aria-hidden className="size-3" /> {t.doctor.aiSuggestion}: {t.specialties[a.aiSpecialty].name}
+              <Badge tone="brand" className="min-w-0" title={`${t.doctor.aiSuggestion}: ${t.specialties[a.aiSpecialty].name}`}>
+                <Sparkles aria-hidden className="size-3 shrink-0" />
+                <span className="truncate">
+                  {compact ? "" : `${t.doctor.aiSuggestion}: `}
+                  {t.specialties[a.aiSpecialty].name}
+                </span>
               </Badge>
-              {a.aiUrgency && a.aiUrgency !== "routine" && <Badge tone={a.aiUrgency === "emergency" ? "danger" : "warm"}>{t.urgency[a.aiUrgency]}</Badge>}
+              {a.aiUrgency && a.aiUrgency !== "routine" && (
+                <Badge tone={a.aiUrgency === "emergency" ? "danger" : "warm"} className="min-w-0" title={t.urgency[a.aiUrgency]}>
+                  <span className="truncate">{t.urgency[a.aiUrgency]}</span>
+                </Badge>
+              )}
             </p>
           )}
         </div>
@@ -127,7 +146,7 @@ export default async function DoctorPage({ searchParams }: { searchParams: Promi
           {days.map((d) => {
             const items = list.filter((a) => dateKey(a.startsAt) === d);
             return (
-              <section key={d} aria-label={formatDateKey(d, locale as Locale)} className={cn("rounded-2xl border border-line bg-canvas/70 p-2.5", d === today && "border-brand-300 bg-brand-50/50")}>
+              <section key={d} aria-label={formatDateKey(d, locale as Locale)} className={cn("min-w-0 rounded-2xl border border-line bg-canvas/70 p-2.5", d === today && "border-brand-300 bg-brand-50/50")}>
                 <Link href={href("day", d)} className="mb-2 flex items-baseline justify-between rounded-lg px-1.5 py-1 hover:bg-ink/5">
                   <span className="text-sm font-semibold first-letter:uppercase">{formatDateKey(d, locale as Locale, { month: undefined, day: "numeric", weekday: "short" })}</span>
                   <span className="text-xs text-muted tabular-nums">{items.length}</span>

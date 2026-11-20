@@ -25,7 +25,7 @@ if (firstRun) {
   const c = pg.getPgClient();
   await c.connect();
   await c.query("create role hamshifo_app login password 'hamshifo_app' createrole");
-  await c.query("create database hamshifo owner hamshifo_app");
+  await c.query("create database hamshifo owner hamshifo_app encoding 'UTF8' template template0");
   await c.end();
 }
 console.log("Local Postgres ready: postgres://hamshifo_app:hamshifo_app@127.0.0.1:54329/hamshifo (Ctrl+C to stop)");

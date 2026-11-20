@@ -317,7 +317,7 @@ export function ExplainerChat({
         <Card className="p-5 sm:p-6">
           <div className="space-y-5" aria-live="polite">
             {!appointmentId && (
-              <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap text-white">
+              <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap wrap-anywhere text-white">
                 {mode === "photo" && image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={image.preview} alt="" className="max-h-40 rounded-lg" />
@@ -328,7 +328,7 @@ export function ExplainerChat({
             )}
             {messages.map((msg, i) =>
               msg.role === "user" ? (
-                <div key={i} className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap text-white">
+                <div key={i} className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-ink px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap wrap-anywhere text-white">
                   {msg.text}
                 </div>
               ) : (

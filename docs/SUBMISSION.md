@@ -16,7 +16,7 @@ An electronic queue and appointment-slot system for Fergana-region polyclinics, 
 - Google sign-in, plus one-click low-privilege demo accounts.
 - Security: Row Level Security on every table, roles assigned only by an admin, httpOnly SameSite cookies, CSRF Origin checks, rate limits, strict CSP and security headers. The AI receives no names or phones, and photos are never stored.
 
-**What is simulated:** 3 clinics (Fergana, Margilan, Kokand), 14 doctors, 14 days of slots, patients and prescriptions are all fictional demo data. Pharmacy (Dorixona) and the mobile app are "Coming soon" only. There are no real clinic integrations, SMS or payments.
+**What is simulated:** 21 clinics (every regional centre of Uzbekistan and larger towns), 94 doctors, 14 days of slots, patients and prescriptions are all fictional demo data. Pharmacy (Dorixona) and the mobile app are "Coming soon" only. There are no real clinic integrations, SMS or payments.
 
 **AI tools used:** Inside the product, Anthropic **Claude Haiku 5.5** (Hamdard AI), called only from the server. For development, **Claude** (Anthropic) was used as a coding assistant for code, design and tests.
 

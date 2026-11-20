@@ -37,7 +37,7 @@ export default async function AppointmentPage({ params }: { params: Promise<{ id
           <Badge tone={a.status === "booked" ? "brand" : "neutral"}>{t.status[a.status]}</Badge>
           <Badge tone="outline">{t.specialties[a.doctor.specialty].name}</Badge>
         </div>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight">{a.doctor.fullName}</h1>
+        <h1 className="mt-3 text-2xl font-semibold tracking-tight wrap-anywhere">{a.doctor.fullName}</h1>
         <div className="mt-3 grid gap-2 text-sm text-ink-2 sm:grid-cols-2">
           <p className="flex items-start gap-2">
             <CalendarDays aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
@@ -55,7 +55,7 @@ export default async function AppointmentPage({ params }: { params: Promise<{ id
         {a.symptoms && (
           <div className="mt-4 rounded-xl bg-canvas p-4 text-sm ring-1 ring-line">
             <p className="text-xs font-semibold tracking-wide text-muted uppercase">{t.appointment.yourSymptoms}</p>
-            <p className="mt-1 whitespace-pre-wrap text-ink-2">{a.symptoms}</p>
+            <p className="mt-1 whitespace-pre-wrap wrap-anywhere text-ink-2">{a.symptoms}</p>
           </div>
         )}
       </Card>
@@ -67,7 +67,7 @@ export default async function AppointmentPage({ params }: { params: Promise<{ id
         {a.note ? (
           <>
             <Card className="p-5 sm:p-6">
-              <p className="text-[15px] leading-relaxed whitespace-pre-wrap text-ink">{a.note.recommendations}</p>
+              <p className="text-[15px] leading-relaxed whitespace-pre-wrap wrap-anywhere text-ink">{a.note.recommendations}</p>
               <p className="mt-4 text-xs text-muted">
                 — {a.doctor.fullName}, {formatDate(a.note.updatedAt, locale, { weekday: undefined })}
               </p>

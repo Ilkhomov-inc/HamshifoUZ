@@ -3,10 +3,11 @@ import { listDoctors } from "@/lib/data/catalog";
 import { getCurrentUser } from "@/lib/auth/session";
 import { apiError } from "@/lib/security";
 import { SPECIALTIES } from "@/lib/ai/specialties";
+import { CITIES } from "@/lib/cities";
 
 const query = z.object({
   specialty: z.enum(SPECIALTIES).optional(),
-  city: z.enum(["fergana", "margilan", "kokand"]).optional(),
+  city: z.enum(CITIES).optional(),
 });
 
 export async function GET(req: Request) {

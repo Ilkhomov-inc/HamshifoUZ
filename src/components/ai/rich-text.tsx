@@ -29,7 +29,7 @@ export function RichText({ text }: { text: string }) {
           {list.map((li, i) => (
             <li key={i} className="flex gap-2">
               <span aria-hidden className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-brand-500" />
-              <span>{inline(li, `li-${k}-${i}`)}</span>
+              <span className="min-w-0">{inline(li, `li-${k}-${i}`)}</span>
             </li>
           ))}
         </ul>,
@@ -62,5 +62,5 @@ export function RichText({ text }: { text: string }) {
     }
   });
   flush(lines.length);
-  return <div className="text-[15px] leading-relaxed text-ink-2">{blocks}</div>;
+  return <div className="text-[15px] leading-relaxed wrap-anywhere text-ink-2">{blocks}</div>;
 }

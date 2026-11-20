@@ -11,7 +11,7 @@ export default async function PrivacyPage() {
   const { t } = await getI18n();
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-4xl font-semibold tracking-tight">{t.privacy.title}</h1>
+      <h1 className="text-3xl font-semibold tracking-tight hyphens-auto sm:text-4xl">{t.privacy.title}</h1>
       <div className="mt-8 grid gap-4">
         {t.privacy.items.map((it) => (
           <Card key={it.title} className="p-5">

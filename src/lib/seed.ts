@@ -1,5 +1,6 @@
 import type { Db } from "./db";
-import type { Specialty } from "./ai/specialties";
+import { SPECIALTIES, type Specialty } from "./ai/specialties";
+import { CITY_LIST, type City } from "./cities";
 
 /**
  * DEMO DATA ONLY. Every clinic, doctor, patient, phone number and prescription
@@ -9,15 +10,27 @@ import type { Specialty } from "./ai/specialties";
 export const DEMO_DOCTOR_EMAIL = "demo-doctor@hamshifo.invalid";
 export const DEMO_DOCTOR_SLUG = "dilnoza-karimova";
 
-export const CLINICS = [
+const FERGANA_VALLEY = [
   { slug: "fergana-demo", name: "Farg'ona oilaviy poliklinikasi (demo)", city: "fergana", address: "Farg'ona sh., Namuna ko'chasi, 12", phone: "+998 00 000 01 01" },
   { slug: "margilan-demo", name: "Marg'ilon shahar poliklinikasi (demo)", city: "margilan", address: "Marg'ilon sh., Namuna ko'chasi, 7", phone: "+998 00 000 02 02" },
   { slug: "kokand-demo", name: "Qo'qon oilaviy poliklinikasi (demo)", city: "kokand", address: "Qo'qon sh., Namuna ko'chasi, 3", phone: "+998 00 000 03 03" },
-] as const;
+];
 
-type DoctorSeed = { slug: string; clinic: (typeof CLINICS)[number]["slug"]; name: string; specialty: Specialty; room: string; minutes: number; langs: string[] };
+/** One fictional polyclinic in every other city. */
+export const CLINICS: { slug: string; name: string; city: City; address: string; phone: string }[] = [
+  ...(FERGANA_VALLEY as { slug: string; name: string; city: City; address: string; phone: string }[]),
+  ...CITY_LIST.filter((c) => !FERGANA_VALLEY.some((f) => f.city === c.slug)).map((c, i) => ({
+    slug: `${c.slug}-demo`,
+    name: `${c.uz} shahar poliklinikasi (demo)`,
+    city: c.slug,
+    address: `${c.uz} sh., Namuna ko'chasi, ${(i % 9) + 1}`,
+    phone: `+998 00 000 ${String(i + 4).padStart(2, "0")} ${String(i + 4).padStart(2, "0")}`,
+  })),
+];
 
-export const DOCTORS: DoctorSeed[] = [
+type DoctorSeed = { slug: string; clinic: string; name: string; specialty: Specialty; room: string; minutes: number; langs: string[] };
+
+const FERGANA_DOCTORS: DoctorSeed[] = [
   { slug: DEMO_DOCTOR_SLUG, clinic: "fergana-demo", name: "Dilnoza Karimova", specialty: "Terapevt", room: "104", minutes: 20, langs: ["uz", "ru"] },
   { slug: "umida-sobirova", clinic: "margilan-demo", name: "Umida Sobirova", specialty: "Terapevt", room: "12", minutes: 20, langs: ["uz", "ru"] },
   { slug: "akmal-jorayev", clinic: "kokand-demo", name: "Akmal Jo'rayev", specialty: "Terapevt", room: "8", minutes: 20, langs: ["uz", "ru", "en"] },
@@ -33,6 +46,40 @@ export const DOCTORS: DoctorSeed[] = [
   { slug: "otabek-nazarov", clinic: "kokand-demo", name: "Otabek Nazarov", specialty: "Travmatolog", room: "2", minutes: 20, langs: ["uz", "ru"] },
   { slug: "farrux-abdullayev", clinic: "kokand-demo", name: "Farrux Abdullayev", specialty: "Urolog", room: "23", minutes: 30, langs: ["uz", "ru"] },
 ];
+
+const FIRST = ["Aziz", "Nodira", "Sanjar", "Dildora", "Bekzod", "Gulchehra", "Sherali", "Mohira", "Islom", "Lola", "Temur", "Sevara", "Anvar", "Zuhra", "Doniyor", "Barno", "Ravshan", "Yulduz", "Komil", "Nargiza"];
+const LAST = ["Qodirov", "Toshmatova", "Ergashev", "Rasulova", "Hamidov", "Salimova", "Yo'ldoshev", "Azimova", "Murodov", "Sultonova", "Nurmatov", "Ahmedova", "Xudoyberdiyev", "Ismoilova", "Karimov", "Saidova", "Boboyev", "Mahmudova", "Usmonov", "Abdullayeva"];
+
+/** Tashkent gets every specialty; other cities a therapist, a paediatrician and two rotating specialists. */
+function cityDoctors(): DoctorSeed[] {
+  const out: DoctorSeed[] = [];
+  const others = SPECIALTIES.filter((s) => s !== "Terapevt" && s !== "Pediatr");
+  let n = 0;
+  CLINICS.filter((c) => !FERGANA_VALLEY.some((f) => f.slug === c.slug)).forEach((c, ci) => {
+    const specs: Specialty[] =
+      c.city === "tashkent" ? [...SPECIALTIES] : ["Terapevt", "Pediatr", others[(ci * 2) % others.length]!, others[(ci * 2 + 1) % others.length]!];
+    for (const specialty of specs) {
+      const first = FIRST[n % FIRST.length]!;
+      const last = LAST[(n * 7 + ci) % LAST.length]!;
+      // Keep surname gender consistent with the first name (even index = male).
+      const female = (n % FIRST.length) % 2 === 1;
+      const surname = female ? (last.endsWith("a") ? last : `${last}a`) : last.endsWith("a") ? last.slice(0, -1) : last;
+      out.push({
+        slug: `${c.city}-${specialty.toLowerCase()}`,
+        clinic: c.slug,
+        name: `${first} ${surname}`,
+        specialty,
+        room: String(100 + ((n * 13) % 200)),
+        minutes: specialty === "Terapevt" || specialty === "Pediatr" ? 20 : 30,
+        langs: n % 3 === 0 ? ["uz", "ru", "en"] : ["uz", "ru"],
+      });
+      n++;
+    }
+  });
+  return out;
+}
+
+export const DOCTORS: DoctorSeed[] = [...FERGANA_DOCTORS, ...cityDoctors()];
 
 const SEED_PATIENTS = [
   { name: "Madina Xasanova", phone: "+998000000101", symptoms: "3 kundan beri harorat 38, yo'tal va holsizlik.", spec: "Terapevt", urg: "soon" },
@@ -159,17 +206,26 @@ export async function reseed(db: Db): Promise<{ slots: number; appointments: num
     "select id, doctor_id from hs.slots where doctor_id <> $1 and starts_at > now() order by doctor_id, starts_at",
     [demoDoctorId],
   );
+  const taken: { slot: string[]; doctor: string[]; patient: string[]; name: string[]; phone: string[] } = { slot: [], doctor: [], patient: [], name: [], phone: [] };
   for (const s of others.rows) {
     if (rand() < 0.22) {
       const pIdx = Math.floor(rand() * SEED_PATIENTS.length);
       const p = SEED_PATIENTS[pIdx]!;
-      await db.query(
-        `insert into hs.appointments (slot_id, doctor_id, patient_id, patient_name, patient_phone, symptoms, status)
-         values ($1,$2,$3,$4,$5,'', 'booked')`,
-        [s.id, s.doctor_id, patientIds[pIdx], p.name, p.phone],
-      );
-      appts++;
+      taken.slot.push(s.id);
+      taken.doctor.push(s.doctor_id);
+      taken.patient.push(patientIds[pIdx]!);
+      taken.name.push(p.name);
+      taken.phone.push(p.phone);
     }
+  }
+  if (taken.slot.length) {
+    // One round trip instead of thousands: the database may be far away.
+    await db.query(
+      `insert into hs.appointments (slot_id, doctor_id, patient_id, patient_name, patient_phone, symptoms, status)
+       select s, d, p, n, ph, '', 'booked' from unnest($1::uuid[], $2::uuid[], $3::uuid[], $4::text[], $5::text[]) as t(s, d, p, n, ph)`,
+      [taken.slot, taken.doctor, taken.patient, taken.name, taken.phone],
+    );
+    appts += taken.slot.length;
   }
 
   return { slots: slotRes.rows[0]!.n, appointments: appts };

@@ -1,3 +1,4 @@
+import { cityNames } from "../cities";
 const uz = {
   meta: {
     title: "Hamshifo UZ — sog'liq sari yo'lda yo'ldoshingiz",
@@ -65,13 +66,13 @@ const uz = {
     Endokrinolog: { name: "Endokrinolog", desc: "Qalqonsimon bez, qand miqdori" },
     Urolog: { name: "Urolog", desc: "Siydik yo'llari, buyrak" },
   },
-  cities: { all: "Barcha shaharlar", fergana: "Farg'ona", margilan: "Marg'ilon", kokand: "Qo'qon" } as Record<string, string>,
+  cities: { all: "Barcha shaharlar", ...cityNames("uz") } as Record<string, string>,
   urgency: { routine: "Rejali", soon: "Tezroq ko'rinish kerak", emergency: "Shoshilinch" },
   confidence: { low: "Taxminiy", medium: "O'rtacha ishonch", high: "Yuqori ishonch" },
   status: { booked: "Yozilgan", completed: "Yakunlangan", cancelled: "Bekor qilingan", no_show: "Kelmadi" } as Record<string, string>,
   steps: { symptoms: "Belgilar", specialist: "Mutaxassis", slot: "Vaqt", done: "Tayyor" },
   landing: {
-    heroEyebrow: "Farg'ona viloyati poliklinikalari uchun",
+    heroEyebrow: "O'zbekiston poliklinikalari uchun",
     heroTitle: "Shifokorga navbatsiz,",
     heroTitleAccent: "o'z vaqtingizda.",
     heroSubtitle:
@@ -361,7 +362,7 @@ const uz = {
   about: {
     title: "Demo haqida",
     intro:
-      "Hamshifo UZ — Farg'ona viloyati poliklinikalaridagi navbatlarni qisqartirish uchun elektron navbat va qabul vaqti tizimi. Hamdard AI — ortiqcha navbatlarning ikki sababini bartaraf etuvchi qo'shimcha.",
+      "Hamshifo UZ — O'zbekiston poliklinikalaridagi navbatlarni qisqartirish uchun elektron navbat va qabul vaqti tizimi. Hamdard AI — ortiqcha navbatlarning ikki sababini bartaraf etuvchi qo'shimcha.",
     howToTitle: "Hakamlar uchun 3 daqiqalik yo'l",
     howTo: [
       "«Kirish» → «Demo bemor». Bosh sahifadagi formaga belgilarni yozing yoki «Navbat olish» ni bosing.",
@@ -382,7 +383,7 @@ const uz = {
     ],
     simulatedTitle: "Nima namunaviy (simulyatsiya)",
     simulated: [
-      "3 ta klinika (Farg'ona, Marg'ilon, Qo'qon) va 14 nafar shifokor — barchasi to'qima",
+      "21 ta klinika (barcha viloyat markazlari va yirik shaharlar) va 94 nafar shifokor — barchasi to'qima",
       "14 kunlik qabul vaqtlari va ba'zi band vaqtlar — avtomatik yaratilgan",
       "Retseptlar va bemorlar — namunaviy, haqiqiy shaxslar emas; telefon raqamlari mavjud bo'lmagan «00» kodida",
       "Dorixona bo'limi va mobil ilova — faqat «Tez kunda», ishlamaydi",

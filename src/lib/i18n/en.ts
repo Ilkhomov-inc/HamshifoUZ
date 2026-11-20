@@ -1,3 +1,4 @@
+import { cityNames } from "../cities";
 import type { Dict } from "./uz";
 
 const en: Dict = {
@@ -67,13 +68,13 @@ const en: Dict = {
     Endokrinolog: { name: "Endocrinologist", desc: "Thyroid, blood sugar" },
     Urolog: { name: "Urologist", desc: "Urinary tract, kidneys" },
   },
-  cities: { all: "All cities", fergana: "Fergana", margilan: "Margilan", kokand: "Kokand" },
+  cities: { all: "All cities", ...cityNames("en") },
   urgency: { routine: "Routine", soon: "Better soon", emergency: "Urgent" },
   confidence: { low: "Tentative", medium: "Medium confidence", high: "High confidence" },
   status: { booked: "Booked", completed: "Completed", cancelled: "Cancelled", no_show: "No-show" },
   steps: { symptoms: "Symptoms", specialist: "Specialist", slot: "Time", done: "Done" },
   landing: {
-    heroEyebrow: "For polyclinics of the Fergana region",
+    heroEyebrow: "For polyclinics across Uzbekistan",
     heroTitle: "See a doctor without the queue,",
     heroTitleAccent: "right on time.",
     heroSubtitle:
@@ -363,7 +364,7 @@ const en: Dict = {
   about: {
     title: "About this demo",
     intro:
-      "Hamshifo UZ is an electronic queue and appointment-slot system to cut queues in the polyclinics of the Fergana region. Hamdard AI is an add-on that removes the two causes of avoidable extra queues.",
+      "Hamshifo UZ is an electronic queue and appointment-slot system to cut queues in polyclinics across Uzbekistan. Hamdard AI is an add-on that removes the two causes of avoidable extra queues.",
     howToTitle: "A 3-minute path for judges",
     howTo: [
       "Sign in → “Demo patient”. Type symptoms into the form on the home page, or press “Book a visit”.",
@@ -384,7 +385,7 @@ const en: Dict = {
     ],
     simulatedTitle: "What is simulated",
     simulated: [
-      "3 clinics (Fergana, Margilan, Kokand) and 14 doctors — all fictional",
+      "21 clinics (every regional centre and larger towns) and 94 doctors — all fictional",
       "14 days of appointment slots and some taken slots — generated automatically",
       "Prescriptions and patients — fictional; phone numbers use the non-existent “00” code",
       "Pharmacy section and mobile app — “Coming soon” only, not functional",

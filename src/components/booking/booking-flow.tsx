@@ -26,7 +26,7 @@ import { MAX_SYMPTOMS, normalizePhone } from "@/lib/validation-client";
 import { cn } from "@/lib/cn";
 import { Button, buttonClass } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Segmented } from "@/components/ui/segmented";
+import { CITIES } from "@/lib/cities";
 import { Card, Skeleton } from "@/components/ui/card";
 import { FieldError, Hint, Input, Label, Textarea } from "@/components/ui/field";
 import { HamdardAvatar, TypingDots } from "@/components/ai/avatar";
@@ -46,7 +46,6 @@ type BookingUser = { name: string; isDemo: boolean } | null;
 
 const STORAGE_KEY = "hs_booking_v2";
 const STEP_INDEX: Record<Step, 0 | 1 | 2 | 3> = { symptoms: 0, specialist: 1, slot: 2, details: 2, done: 3 };
-const CITIES = ["fergana", "margilan", "kokand"] as const;
 
 type Persisted = {
   step: Step;
@@ -619,7 +618,7 @@ export function BookingFlow({
                       <div ref={pickerRef} className="scroll-mt-20">
                       <Card className="animate-fade-up p-5">
                         <p className="font-semibold text-ink">{t.book.pickSpecialty}</p>
-                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                        <div className="mt-4 grid gap-2 sm:grid-cols-2 [&>*]:min-w-0">
                           {SPECIALTIES.map((s) => (
                             <button
                               key={s}
@@ -669,15 +668,23 @@ export function BookingFlow({
                     </label>
                   </div>
 
-                  <Segmented
-                    label={t.book.filterCity}
-                    value={city}
-                    onChange={setCity}
-                    options={["", ...CITIES].map((c) => ({ value: c, label: t.cities[c || "all"] }))}
-                    className="no-scrollbar mt-5 flex overflow-x-auto sm:inline-flex"
-                  />
+                  <label className="mt-5 flex items-center gap-2 text-sm">
+                    <MapPin aria-hidden className="size-4 text-muted" />
+                    <span className="sr-only">{t.book.filterCity}</span>
+                    <select
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="h-10 rounded-full border border-line-strong bg-surface px-4 text-sm font-medium"
+                    >
+                      {["", ...CITIES].map((c) => (
+                        <option key={c || "all"} value={c}>
+                          {t.cities[c || "all"]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
 
-                  <div className="mt-5 grid gap-3">
+                  <div className="mt-5 grid gap-3 [&>*]:min-w-0">
                     {doctors === null &&
                       [0, 1, 2].map((i) => (
                         <Card key={i} className="flex items-center gap-4 p-5">
@@ -698,8 +705,8 @@ export function BookingFlow({
                               {initials(d.fullName)}
                             </span>
                             <div className="min-w-0">
-                              <p className="font-semibold text-ink">{d.fullName}</p>
-                              <p className="truncate text-sm text-muted">
+                              <p className="font-semibold wrap-anywhere text-ink">{d.fullName}</p>
+                              <p className="truncate text-sm text-muted" title={d.clinic.name}>
                                 {specName(d.specialty)} · {d.clinic.name}
                               </p>
                               <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-2">
@@ -732,7 +739,7 @@ export function BookingFlow({
 
               {(step === "slot" || step === "details") && doctor && (
                 <Card className="overflow-hidden">
-                  <div className={cn("grid", step === "slot" ? "lg:grid-cols-[280px_1fr_260px]" : "lg:grid-cols-[280px_1fr]")}>
+                  <div className={cn("grid [&>*]:min-w-0", step === "slot" ? "lg:grid-cols-[280px_1fr_260px]" : "lg:grid-cols-[280px_1fr]")}>
                     {/* Left: doctor & clinic */}
                     <aside className="border-b border-line p-5 sm:p-6 lg:border-r lg:border-b-0">
                       <Button
@@ -748,11 +755,11 @@ export function BookingFlow({
                         {initials(doctor.fullName)}
                       </span>
                       <p className="mt-3 text-sm text-muted">{specName(doctor.specialty)}</p>
-                      <h2 className="text-xl font-semibold tracking-tight text-ink">{doctor.fullName}</h2>
+                      <h2 className="text-xl font-semibold tracking-tight wrap-anywhere text-ink">{doctor.fullName}</h2>
                       <ul className="mt-4 space-y-2.5 text-sm text-ink-2">
                         <li className="flex gap-2.5">
                           <Stethoscope aria-hidden className="mt-0.5 size-4 shrink-0 text-muted" />
-                          <span>
+                          <span className="min-w-0 wrap-anywhere">
                             {doctor.clinic.name}
                             <span className="block text-muted">
                               {doctor.clinic.address} · {t.common.room} {doctor.room}
@@ -957,12 +964,12 @@ export function BookingFlow({
                       </dd>
                     </div>
                     <div className="flex justify-between gap-4">
-                      <dt className="text-muted">{specName(booked.doctor.specialty)}</dt>
-                      <dd className="text-right font-semibold">{booked.doctor.fullName}</dd>
+                      <dt className="shrink-0 text-muted">{specName(booked.doctor.specialty)}</dt>
+                      <dd className="min-w-0 text-right font-semibold wrap-anywhere">{booked.doctor.fullName}</dd>
                     </div>
                     <div className="flex justify-between gap-4">
                       <dt className="text-muted">{t.common.clinic}</dt>
-                      <dd className="text-right">
+                      <dd className="min-w-0 text-right wrap-anywhere">
                         {booked.doctor.clinic.name}
                         <span className="block text-muted">
                           {t.common.room} {booked.doctor.room}
@@ -970,7 +977,7 @@ export function BookingFlow({
                       </dd>
                     </div>
                   </dl>
-                  <div className="mt-6 grid gap-2">
+                  <div className="mt-6 grid gap-2 [&>*]:min-w-0">
                     <Link href="/appointments" className={buttonClass("primary", "lg")}>
                       {t.book.viewAppointments}
                     </Link>

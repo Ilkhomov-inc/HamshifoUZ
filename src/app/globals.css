@@ -103,6 +103,8 @@
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Long names, URLs or text typed without spaces wrap instead of widening the page. */
+    overflow-wrap: break-word;
   }
   ::selection {
     background: var(--color-brand-100);

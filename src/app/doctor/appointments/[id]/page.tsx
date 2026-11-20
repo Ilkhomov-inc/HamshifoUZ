@@ -34,10 +34,10 @@ export default async function DoctorAppointmentPage({ params }: { params: Promis
       <Link href={`/doctor?view=day&date=${dateKey(a.startsAt)}`} className={buttonClass("ghost", "sm", "-ml-3")}>
         <ArrowLeft aria-hidden className="btn-arrow-back size-4" /> {t.doctor.backToSchedule}
       </Link>
-      <div className="mt-4 grid gap-5 lg:grid-cols-[1fr_1.3fr]">
+      <div className="mt-4 grid gap-5 lg:grid-cols-[1fr_1.3fr] [&>*]:min-w-0">
         <Card className="h-fit p-5 sm:p-6">
           <p className="text-xs font-semibold tracking-wide text-muted uppercase">{t.doctor.patient}</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight">{a.patientName}</h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight wrap-anywhere">{a.patientName}</h1>
           <a href={`tel:${a.patientPhone}`} className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline">
             <Phone aria-hidden className="size-3.5" /> {formatPhone(a.patientPhone)}
           </a>
@@ -53,7 +53,7 @@ export default async function DoctorAppointmentPage({ params }: { params: Promis
 
           <div className="mt-5 rounded-xl bg-canvas p-4 ring-1 ring-line">
             <p className="text-xs font-semibold tracking-wide text-muted uppercase">{t.doctor.symptoms}</p>
-            <p className="mt-1.5 text-[15px] whitespace-pre-wrap text-ink">{a.symptoms || <span className="text-muted italic">{t.doctor.noSymptoms}</span>}</p>
+            <p className="mt-1.5 text-[15px] whitespace-pre-wrap wrap-anywhere text-ink">{a.symptoms || <span className="text-muted italic">{t.doctor.noSymptoms}</span>}</p>
           </div>
           {a.aiSpecialty && (
             <div className="mt-3 rounded-xl bg-brand-50/70 p-4 ring-1 ring-brand-100">
