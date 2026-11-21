@@ -5,6 +5,7 @@ import { getI18n } from "@/lib/i18n/server";
 import { I18nProvider } from "@/lib/i18n/client";
 import { MotionProvider } from "@/components/layout/motion-provider";
 import { RevealObserver } from "@/components/layout/reveal-observer";
+import { GlassPointer } from "@/components/layout/glass-pointer";
 import { DemoBanner } from "@/components/layout/demo-banner";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -55,6 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <main id="main">{children}</main>
             <Footer />
             <RevealObserver />
+            <GlassPointer />
           </MotionProvider>
         </I18nProvider>
       </body>

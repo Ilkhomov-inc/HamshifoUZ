@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 
 /** Hamdard AI avatar — a soft speech-bubble with a heartbeat, drawn in-house. */
 export function HamdardAvatar({ className, pulse = false }: { className?: string; pulse?: boolean }) {
@@ -22,12 +23,17 @@ export function HamdardAvatar({ className, pulse = false }: { className?: string
   );
 }
 
-export function TypingDots({ label }: { label: string }) {
+/** Hamdard AI "thinking" line: the label shimmers in brand teal while the answer is on its way. */
+export function HamdardThinking({ text, className }: { text: string; className?: string }) {
   return (
-    <span role="status" aria-label={label} className="inline-flex items-center gap-1 py-1">
-      {[0, 1, 2].map((i) => (
-        <span key={i} className="size-1.5 animate-dot rounded-full bg-brand-600" style={{ animationDelay: `${i * 0.15}s` }} />
-      ))}
+    <span role="status" className={cn("inline-flex", className)}>
+      <TextShimmer
+        text={text}
+        duration={2}
+        baseColor="var(--color-muted)"
+        shimmerColor="var(--color-brand-400)"
+        className="text-sm font-medium"
+      />
     </span>
   );
 }

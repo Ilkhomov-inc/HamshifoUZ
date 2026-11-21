@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, CalendarDays, Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n/client";
-import { HamdardAvatar, TypingDots } from "@/components/ai/avatar";
+import { HamdardAvatar, HamdardThinking } from "@/components/ai/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -126,9 +126,7 @@ export function HeroWidget() {
 
         <div className="mt-4 min-h-[156px]" aria-live="polite">
           {phase === "thinking" && (
-            <div className="flex items-center gap-2 text-sm text-muted">
-              <TypingDots label={t.ai.typing} /> {t.book.analyzing}
-            </div>
+            <HamdardThinking text={t.book.analyzing} />
           )}
           <div className={cn("transition-[opacity,transform] duration-500", showResult ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0")}>
             <div className="flex items-start gap-3 rounded-xl bg-brand-50 p-3.5 ring-1 ring-brand-100">

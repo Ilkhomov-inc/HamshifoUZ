@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1794771145.903774,
-    "seen": 1794840829.287276,
-    "ast_hash": "e2ff8c4999c25d7552b6cd6464d97cfe",
+    "mtime": 1795280351.2031243,
+    "seen": 1795280587.5973,
+    "ast_hash": "5e12c0469b806fc6190fd0d78815136b",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
-    "mtime": 1794731413.7757404,
-    "seen": 1794752450.151078,
-    "ast_hash": "a46f42875d439b28aea0d98108f82637",
+    "mtime": 1795281156.441227,
+    "seen": 1795281229.142886,
+    "ast_hash": "13c32b2c9e5530e02f45ceec5bc7e969",
     "semantic_hash": ""
   },
   "src/app/not-found.tsx": {
@@ -210,9 +210,9 @@
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
-    "mtime": 1794760272.5636811,
-    "seen": 1794770270.783828,
-    "ast_hash": "0fcb7cb48a8ca786cffdaac9772045ac",
+    "mtime": 1795280502.4676962,
+    "seen": 1795280587.597805,
+    "ast_hash": "5018b46c21a2792e8c6734198bfd315b",
     "semantic_hash": ""
   },
   "src/app/privacy/page.tsx": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "src/components/ai/avatar.tsx": {
-    "mtime": 1794731327.963787,
-    "seen": 1794752450.1510808,
-    "ast_hash": "7f215651fe7d44ab1a793a3caea1163a",
+    "mtime": 1795280463.7667253,
+    "seen": 1795280587.597847,
+    "ast_hash": "dd9b1cb8dfd6102bf8698bf7b06db72a",
     "semantic_hash": ""
   },
   "src/components/ai/emergency-banner.tsx": {
@@ -246,9 +246,9 @@
     "semantic_hash": ""
   },
   "src/components/ai/explainer-chat.tsx": {
-    "mtime": 1795181193.236271,
-    "seen": 1795182091.35373,
-    "ast_hash": "ceee34e47fb5943747c6da7fe367649f",
+    "mtime": 1795280463.7690578,
+    "seen": 1795280587.597863,
+    "ast_hash": "1735deedbdb1230b749b5c0a13cf64f3",
     "semantic_hash": ""
   },
   "src/components/ai/rich-text.tsx": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "src/components/booking/booking-flow.tsx": {
-    "mtime": 1795244610.1802545,
-    "seen": 1795244693.522503,
-    "ast_hash": "50b5905627b11f163e360bfbcd0fd08e",
+    "mtime": 1795281531.3489718,
+    "seen": 1795281554.55665,
+    "ast_hash": "c184ff53f29e010758e02fd08bc857a8",
     "semantic_hash": ""
   },
   "src/components/booking/calendar.tsx": {
@@ -306,9 +306,9 @@
     "semantic_hash": ""
   },
   "src/components/brand/logo.tsx": {
-    "mtime": 1794769705.365413,
-    "seen": 1794770270.78396,
-    "ast_hash": "bd8e2be902dff8fca60743fd66977ec9",
+    "mtime": 1795279847.6173818,
+    "seen": 1795279969.290217,
+    "ast_hash": "80eb244529c4535137f1e7047e6aac92",
     "semantic_hash": ""
   },
   "src/components/doctor/note-form.tsx": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "src/components/landing/hero-widget.tsx": {
-    "mtime": 1794760272.5639198,
-    "seen": 1794770270.783961,
-    "ast_hash": "f42b0cda0205432ac1b8acf9f3d5d119",
+    "mtime": 1795280463.7672422,
+    "seen": 1795280587.598009,
+    "ast_hash": "8d6719b3446d645cfe73ddac852ec067",
     "semantic_hash": ""
   },
   "src/components/landing/notify-form.tsx": {
@@ -378,9 +378,9 @@
     "semantic_hash": ""
   },
   "src/components/layout/user-menu.tsx": {
-    "mtime": 1794769394.519716,
-    "seen": 1794770270.784022,
-    "ast_hash": "f02e0bdf5f131fb1a7fad94f7255de5c",
+    "mtime": 1795281156.442559,
+    "seen": 1795281229.1433442,
+    "ast_hash": "4806bf60232917db093552bcff4c53f7",
     "semantic_hash": ""
   },
   "src/components/ui/badge.tsx": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "src/lib/ai/prompts.ts": {
-    "mtime": 1795182081.1308508,
-    "seen": 1795182091.3542268,
-    "ast_hash": "92094a1ea477efc3b65e9958b254a124",
+    "mtime": 1795258843.237555,
+    "seen": 1795279969.2906492,
+    "ast_hash": "1573ed235418569bdc2b057dd0a823f6",
     "semantic_hash": ""
   },
   "src/lib/ai/router.ts": {
@@ -588,9 +588,9 @@
     "semantic_hash": ""
   },
   "src/lib/validation-client.ts": {
-    "mtime": 1794731702.5774794,
-    "seen": 1794752450.1511092,
-    "ast_hash": "b3fbd6121c507fc5ed1cd82075450a5b",
+    "mtime": 1795259139.160753,
+    "seen": 1795279969.290995,
+    "ast_hash": "f548b4716affa276096ac4afd03fadf5",
     "semantic_hash": ""
   },
   "src/lib/validation.ts": {
@@ -648,9 +648,9 @@
     "semantic_hash": ""
   },
   "tests/unit/validation.test.ts": {
-    "mtime": 1794732432.7042892,
-    "seen": 1794752450.151114,
-    "ast_hash": "f96fd1d4649fc1b51180518315241958",
+    "mtime": 1795259139.1609507,
+    "seen": 1795279969.291164,
+    "ast_hash": "989382ad99b789c9b13ca14098c73260",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -696,9 +696,9 @@
     "semantic_hash": ""
   },
   "src/app/icon.svg": {
-    "mtime": 1794731413.8640654,
-    "seen": 1794752450.151117,
-    "ast_hash": "f61574ce0bfaa3f6686a4da885ff4bf9",
+    "mtime": 1795279860.397987,
+    "seen": 1795279969.291293,
+    "ast_hash": "605c860f6933e409809038396749e5c1",
     "semantic_hash": ""
   },
   "src/components/ui/segmented.tsx": {
@@ -774,15 +774,57 @@
     "semantic_hash": ""
   },
   "src/components/ui/dropdown.tsx": {
-    "mtime": 1795244610.1800857,
-    "seen": 1795244693.522784,
-    "ast_hash": "47fcd712e49fea9baf7eb81ba09fdd4c",
+    "mtime": 1795281156.442377,
+    "seen": 1795281229.143394,
+    "ast_hash": "90008d0e216c9c0a4e9f9d1d1d1b977f",
+    "semantic_hash": ""
+  },
+  "brand/hamshifo-shield-1024.png": {
+    "mtime": 1795279860.4524915,
+    "seen": 1795279969.29129,
+    "ast_hash": "2240e9860ac54de956c78cfdc3b899e6",
+    "semantic_hash": ""
+  },
+  "brand/hamshifo-shield-original.png": {
+    "mtime": 1795279860.4063,
+    "seen": 1795279969.291291,
+    "ast_hash": "889d51c3e5fe03ecfe0cea6df4f50263",
+    "semantic_hash": ""
+  },
+  "brand/hamshifo-shield.svg": {
+    "mtime": 1795279860.4014072,
+    "seen": 1795279969.291292,
+    "ast_hash": "e1b2417b75052ac016f3659b8ada319c",
+    "semantic_hash": ""
+  },
+  "src/app/apple-icon.png": {
+    "mtime": 1795279866.8955917,
+    "seen": 1795279969.291292,
+    "ast_hash": "0a535f3a1d56fb5dca168e1597e765db",
+    "semantic_hash": ""
+  },
+  "src/components/ui/liquid-glass-button.tsx": {
+    "mtime": 1795281156.4427135,
+    "seen": 1795281229.14341,
+    "ast_hash": "06c9e21e9681c700cb4d8d80d014e175",
+    "semantic_hash": ""
+  },
+  "src/components/ui/text-shimmer.tsx": {
+    "mtime": 1795280444.4507315,
+    "seen": 1795280587.598243,
+    "ast_hash": "a7678cff9d65a5c5d642e15dbd19c111",
+    "semantic_hash": ""
+  },
+  "src/components/layout/glass-pointer.tsx": {
+    "mtime": 1795281470.7764783,
+    "seen": 1795281554.556798,
+    "ast_hash": "2185dc88f40a125b9664a82927f45be5",
     "semantic_hash": ""
   },
   "package-lock.json": {
-    "mtime": 1794730354.4366443,
-    "seen": 1794752450.151118,
-    "ast_hash": "c3c12fb4c42f4f1c1693a74d078d11e3",
+    "mtime": 1795280351.2205775,
+    "seen": 1795280587.599144,
+    "ast_hash": "3ac2266fbe44ccd1ec0a85d83d2f842c",
     "semantic_hash": ""
   }
 }

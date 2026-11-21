@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Liquid glass glare strength; registered so hover can fade it in and out. */
+@property --glare {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -35,6 +42,20 @@
   --color-danger-200: #fecdca;
   --color-danger-600: #c0281c;
   --color-danger-700: #a1200f;
+
+  /* shadcn-style aliases, so pasted shadcn components (src/components/ui/liquid-glass-button.tsx)
+     pick up the brand palette. Our own components keep using the names above. */
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-brand-600);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-brand-50);
+  --color-secondary-foreground: var(--color-brand-800);
+  --color-accent: var(--color-brand-50);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--color-danger-600);
+  --color-input: var(--color-line-strong);
+  --color-ring: var(--color-brand-600);
 
   --shadow-card: 0 1px 2px rgb(15 29 25 / 0.04), 0 6px 24px -8px rgb(15 29 25 / 0.08);
   --shadow-pop: 0 2px 4px rgb(15 29 25 / 0.05), 0 18px 48px -16px rgb(15 29 25 / 0.22);
@@ -151,7 +172,7 @@
       border-color 0.18s ease,
       color 0.18s ease,
       box-shadow 0.22s ease,
-      transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .btn > svg {
     flex-shrink: 0;
@@ -171,6 +192,127 @@
   .btn[data-loading="true"] {
     opacity: 0.85;
     cursor: progress;
+  }
+
+
+  /* ─── Liquid glass ─────────────────────────────────────────────────────────
+     Every button, chip, picker and tab pill is a piece of glass: a translucent
+     body that frosts what is behind it, plus a rim drawn by ::after (edge
+     refraction, a specular line on top, a soft sheen). The rim sits under the
+     label (z-index -1 inside an isolated box). Per-variant knobs:
+       --glass-edge    rgb channels of the rim (dark rim on light glass, white on dark)
+       --glass-edge-a  rim strength 0..1
+       --glass-spec    top highlight strength 0..1 */
+  .btn,
+  .chip,
+  .glass {
+    position: relative;
+    isolation: isolate;
+    -webkit-backdrop-filter: blur(14px) saturate(1.8);
+    backdrop-filter: blur(14px) saturate(1.8);
+    --glass-edge: 15 29 25;
+    --glass-edge-a: 1;
+    --glass-spec: 0.9;
+  }
+  .btn::after,
+  .chip::after,
+  .glass::after,
+  .glass-card::after,
+  .segmented-thumb::after,
+  .segmented-item[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    /* layer 1: glare under the cursor (GlassPointer sets --mx/--my); layer 2: resting top sheen */
+    background:
+      radial-gradient(circle 80px at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / calc(var(--glare) * var(--glare-max, 0.7))), transparent),
+      radial-gradient(130% 85% at 50% -25%, rgb(255 255 255 / calc(var(--glass-spec, 0.9) * 0.4)), transparent 60%);
+    box-shadow:
+      inset 0 1px 1px rgb(255 255 255 / var(--glass-spec, 0.9)),
+      inset 3px 3px 0.5px -3px rgb(var(--glass-edge, 15 29 25) / calc(0.8 * var(--glass-edge-a, 1))),
+      inset -3px -3px 0.5px -3px rgb(var(--glass-edge, 15 29 25) / calc(0.75 * var(--glass-edge-a, 1))),
+      inset 1px 1px 1px -0.5px rgb(var(--glass-edge, 15 29 25) / calc(0.45 * var(--glass-edge-a, 1))),
+      inset -1px -1px 1px -0.5px rgb(var(--glass-edge, 15 29 25) / calc(0.45 * var(--glass-edge-a, 1))),
+      inset 0 0 6px 5px rgb(var(--glass-edge, 15 29 25) / calc(0.1 * var(--glass-edge-a, 1))),
+      inset 0 0 2px 2px rgb(var(--glass-edge, 15 29 25) / calc(0.05 * var(--glass-edge-a, 1)));
+    transition:
+      box-shadow 0.22s ease,
+      --glare 0.35s ease;
+  }
+  @media (hover: hover) {
+    .btn:hover::after,
+    .chip:hover::after,
+    .glass:hover::after {
+      --glare: 1;
+    }
+    /* Hover lift from the original LiquidButton: grow to 105% (wide buttons grow by ~14px, see GlassPointer). */
+    .btn:hover,
+    .chip:hover,
+    .glass:hover {
+      transform: scale(var(--glass-scale, 1.05));
+    }
+  }
+  /* The hero LiquidButton draws its own glare layer. */
+  .glare-layer {
+    background: radial-gradient(circle 90px at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / calc(var(--glare) * 0.85)), transparent);
+    transition: --glare 0.35s ease;
+  }
+  @media (hover: hover) {
+    [data-slot="button"]:hover .glare-layer {
+      --glare: 1;
+    }
+  }
+  /* Clear glass for pickers and triggers that are not .btn (dropdowns, user menu). */
+  .glass {
+    background-color: rgb(255 255 255 / 0.5);
+    border-color: transparent;
+  }
+  @media (hover: hover) {
+    .glass:hover {
+      background-color: rgb(255 255 255 / 0.72);
+    }
+  }
+  /* A picked glass choice (time slot): teal tinted glass. */
+  .glass[aria-pressed="true"] {
+    --glass-edge: 255 255 255;
+    --glass-edge-a: 0.55;
+    --glass-spec: 0.5;
+    --glare-max: 0.35;
+    color: #fff;
+    background-color: rgb(15 118 110 / 0.88);
+  }
+  @media (hover: hover) {
+    .glass[aria-pressed="true"]:hover {
+      background-color: rgb(11 95 88 / 0.9);
+    }
+  }
+  /* Choice cards (specialty tiles): plain at rest; the glass rim and the glare
+     appear under the mouse, so a grid of cards does not turn into a wall of pills. */
+  .glass-card {
+    position: relative;
+    isolation: isolate;
+    --glass-edge: 11 95 88;
+    --glass-edge-a: 0;
+    --glass-spec: 0;
+    --glare-max: 0.95;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (hover: hover) {
+    .glass-card:hover {
+      --glass-edge-a: 0.45;
+      --glass-spec: 0.9;
+      transform: translateY(-2px);
+    }
+    .glass-card:hover::after {
+      --glare: 1;
+    }
   }
 
   /* Sizes */
@@ -213,8 +355,12 @@
 
   /* Variants */
   .btn-primary {
+    --glass-edge: 255 255 255;
+    --glass-edge-a: 0.55;
+    --glass-spec: 0.4;
+    --glare-max: 0.2;
     color: #fff;
-    background-color: var(--color-ink);
+    background-color: rgb(15 29 25 / 0.84);
     background-image: linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0) 62%);
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.14),
@@ -222,8 +368,12 @@
       0 5px 14px -6px rgb(15 29 25 / 0.45);
   }
   .btn-warm {
+    --glass-edge: 138 75 18;
+    --glass-edge-a: 0.75;
+    --glass-spec: 0.95;
+    --glare-max: 0.75;
     color: var(--color-ink);
-    background-color: var(--color-warm-400);
+    background-color: rgb(242 166 90 / 0.86);
     background-image:
       linear-gradient(105deg, rgb(255 255 255 / 0) 42%, rgb(255 255 255 / 0.42) 50%, rgb(255 255 255 / 0) 58%),
       linear-gradient(180deg, rgb(255 255 255 / 0.32), rgb(255 255 255 / 0) 62%);
@@ -240,8 +390,12 @@
       0 8px 18px -8px rgb(229 142 58 / 0.7);
   }
   .btn-danger {
+    --glass-edge: 255 255 255;
+    --glass-edge-a: 0.5;
+    --glass-spec: 0.45;
+    --glare-max: 0.35;
     color: #fff;
-    background-color: var(--color-danger-600);
+    background-color: rgb(192 40 28 / 0.88);
     background-image: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 62%);
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.2),
@@ -250,37 +404,33 @@
   }
   .btn-outline {
     color: var(--color-ink);
-    background-color: var(--color-surface);
-    border-color: var(--color-line-strong);
-    box-shadow: 0 1px 2px rgb(15 29 25 / 0.05);
+    background-color: rgb(255 255 255 / 0.5);
+    box-shadow: 0 2px 8px -2px rgb(15 29 25 / 0.1);
   }
   .btn-soft {
+    --glass-edge: 11 95 88;
+    --glass-edge-a: 0.8;
     color: var(--color-brand-700);
-    background-color: var(--color-brand-50);
-    border-color: rgb(173 224 207 / 0.7);
+    background-color: rgb(214 239 230 / 0.55);
   }
   .btn-ghost {
+    --glass-edge-a: 0.4;
+    --glass-spec: 0.7;
     color: var(--color-ink-2);
-    background-color: transparent;
+    background-color: rgb(255 255 255 / 0.22);
     font-weight: 500;
   }
 
   @media (hover: hover) {
-    .btn-primary:hover,
-    .btn-warm:hover,
-    .btn-danger:hover,
-    .btn-outline:hover {
-      transform: translateY(-1px);
-    }
     .btn-primary:hover {
-      background-color: #1c332c;
+      background-color: rgb(28 51 44 / 0.88);
       box-shadow:
         inset 0 1px 0 rgb(255 255 255 / 0.18),
         0 2px 4px rgb(15 29 25 / 0.2),
         0 12px 24px -10px rgb(15 29 25 / 0.55);
     }
     .btn-warm:hover {
-      background-color: #f4b06a;
+      background-color: rgb(244 176 106 / 0.9);
       background-position:
         0% 0,
         0 0;
@@ -294,29 +444,27 @@
         background-position 0.75s cubic-bezier(0.22, 1, 0.36, 1),
         background-color 0.18s ease,
         box-shadow 0.22s ease,
-        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .btn-danger:hover {
-      background-color: var(--color-danger-700);
+      background-color: rgb(161 32 15 / 0.9);
       box-shadow:
         inset 0 1px 0 rgb(255 255 255 / 0.2),
         0 2px 4px rgb(161 32 15 / 0.3),
         0 12px 22px -10px rgb(192 40 28 / 0.75);
     }
     .btn-outline:hover {
-      border-color: rgb(15 29 25 / 0.34);
-      background-color: #fbfdfc;
+      background-color: rgb(255 255 255 / 0.75);
       box-shadow:
         0 1px 2px rgb(15 29 25 / 0.06),
         0 8px 18px -10px rgb(15 29 25 / 0.28);
     }
     .btn-soft:hover {
-      background-color: var(--color-brand-100);
-      border-color: var(--color-brand-200);
+      background-color: rgb(173 224 207 / 0.6);
     }
     .btn-ghost:hover {
       color: var(--color-ink);
-      background-color: rgb(15 29 25 / 0.06);
+      background-color: rgb(255 255 255 / 0.55);
     }
     /* Arrows lean the way they point. */
     .btn:hover .btn-arrow,
@@ -343,11 +491,12 @@
     justify-content: center;
     min-height: 2.25rem;
     padding: 0.375rem 0.875rem;
-    border: 1px solid var(--color-line);
+    border: 1px solid transparent;
     border-radius: 9999px;
-    background-color: var(--color-surface);
+    background-color: rgb(255 255 255 / 0.5);
     color: var(--color-ink-2);
     font-size: 0.8125rem;
+    --glass-edge-a: 0.8;
     font-weight: 500;
     line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
@@ -355,15 +504,16 @@
       background-color 0.18s ease,
       border-color 0.18s ease,
       color 0.18s ease,
-      transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .chip:active {
+  .chip:active,
+  .chip:active:hover {
     transform: scale(0.97);
   }
   @media (hover: hover) {
     .chip:hover {
-      border-color: var(--color-brand-300);
-      background-color: var(--color-brand-50);
+      --glass-edge: 11 95 88;
+      background-color: rgb(238 248 244 / 0.75);
       color: var(--color-brand-800);
     }
   }
@@ -396,21 +546,19 @@
   }
   /* Link-based switches (no sliding thumb): the current page carries the pill itself. */
   .segmented-item[aria-current="page"] {
+    isolation: isolate;
     color: var(--color-ink);
-    background-color: var(--color-surface);
-    box-shadow:
-      0 1px 2px rgb(15 29 25 / 0.14),
-      0 0 0 1px rgb(15 29 25 / 0.04);
+    background-color: rgb(255 255 255 / 0.6);
+    box-shadow: 0 2px 6px -2px rgb(15 29 25 / 0.14);
   }
   .segmented-thumb {
     position: absolute;
     inset: 0;
     z-index: 0;
     border-radius: 9999px;
-    background-color: var(--color-surface);
-    box-shadow:
-      0 1px 2px rgb(15 29 25 / 0.14),
-      0 0 0 1px rgb(15 29 25 / 0.04);
+    isolation: isolate;
+    background-color: rgb(255 255 255 / 0.62);
+    box-shadow: 0 2px 6px -2px rgb(15 29 25 / 0.16);
   }
   .segmented-label {
     position: relative;
@@ -431,6 +579,11 @@
 @media (forced-colors: active) {
   .btn {
     border-color: ButtonText;
+  }
+  .btn::after,
+  .chip::after,
+  .glass::after {
+    display: none;
   }
 }
 
@@ -460,6 +613,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .btn:hover,
+  .chip:hover,
+  .glass:hover,
+  .glass-card:hover {
+    transform: none;
+  }
   *,
   *::before,
   *::after {

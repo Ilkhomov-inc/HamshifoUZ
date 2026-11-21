@@ -120,9 +120,9 @@ export function Dropdown<T extends string>({
         onClick={() => (open ? close() : show())}
         onKeyDown={onButtonKey}
         className={cn(
-          "group inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border bg-surface font-medium text-ink transition-[border-color,box-shadow,background-color] duration-200",
-          "hover:border-line-strong hover:shadow-sm focus-visible:border-brand-600 focus-visible:ring-4 focus-visible:ring-brand-600/15 focus-visible:outline-none disabled:cursor-default disabled:opacity-60",
-          open ? "border-brand-600 shadow-sm ring-4 ring-brand-600/15" : "border-line",
+          "glass group inline-flex max-w-full cursor-pointer items-center gap-2 rounded-full border font-medium text-ink transition-[border-color,box-shadow,background-color,transform] duration-300",
+          "hover:shadow-sm focus-visible:border-brand-600 focus-visible:ring-4 focus-visible:ring-brand-600/15 focus-visible:outline-none disabled:cursor-default disabled:opacity-60",
+          open ? "border-brand-600 shadow-sm ring-4 ring-brand-600/15" : "border-transparent",
           size === "sm" ? "h-9 px-3 text-sm" : "h-11 px-4 text-[15px]",
         )}
       >

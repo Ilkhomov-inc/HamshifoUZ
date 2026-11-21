@@ -13,7 +13,7 @@ import { Button, buttonClass } from "@/components/ui/button";
 import { Card, Spinner } from "@/components/ui/card";
 import { Segmented } from "@/components/ui/segmented";
 import { Hint, Label, Textarea } from "@/components/ui/field";
-import { HamdardAvatar, TypingDots } from "./avatar";
+import { HamdardAvatar, HamdardThinking } from "./avatar";
 import { RichText } from "./rich-text";
 import { EmergencyBanner } from "./emergency-banner";
 
@@ -344,7 +344,7 @@ export function ExplainerChat({
                       ) : msg.text ? (
                         <RichText text={msg.text} />
                       ) : (
-                        <TypingDots label={t.ai.typing} />
+                        <HamdardThinking text={`${t.ai.typing}…`} />
                       )}
                     </div>
                     {msg.emergency && (

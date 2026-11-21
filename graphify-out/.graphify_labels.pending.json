@@ -2,8 +2,8 @@
   "0": "booking-flow.tsx",
   "1": "getI18n",
   "2": "session.ts",
-  "3": "layout.tsx",
-  "4": "harness.ts",
+  "3": "lib/seed.ts",
+  "4": "liquid-glass-button.tsx",
   "5": "validation.ts",
   "6": "Hamshifo UZ — sog'liq sari yo'lda yo'ldoshingiz",
   "7": "router.ts",
@@ -14,7 +14,7 @@
   "12": "explainer.ts",
   "13": "dependencies",
   "14": "package.json",
-  "15": "local-db.ts",
+  "15": "Dropdown",
   "16": "score.ts",
   "17": "smoke-concurrency.ts",
   "18": "hamdard-brain.test.ts",
@@ -28,6 +28,5 @@
   "26": "postcss.config.mjs",
   "27": "proxy.ts",
   "29": "downloadIcs",
-  "30": "lib/seed.ts",
-  "31": "schedule.ts"
+  "30": "lib/seed.ts"
 }

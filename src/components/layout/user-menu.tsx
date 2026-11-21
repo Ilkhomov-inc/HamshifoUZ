@@ -65,7 +65,7 @@ export function UserMenu({ user }: { user: HeaderUser }) {
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 items-center gap-2 rounded-full border border-line bg-surface py-1 pr-2.5 pl-1 text-sm font-medium transition-[border-color,box-shadow] duration-200 hover:border-line-strong hover:shadow-sm active:scale-[0.98] aria-expanded:border-line-strong aria-expanded:shadow-sm"
+        className="glass flex h-9 items-center gap-2 rounded-full border border-transparent py-1 pr-2.5 pl-1 text-sm font-medium transition-[background-color,box-shadow,transform] duration-300 hover:shadow-sm active:scale-[0.98] aria-expanded:shadow-sm"
       >
         <span className="flex size-7 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-800">
           {initials(user.name)}

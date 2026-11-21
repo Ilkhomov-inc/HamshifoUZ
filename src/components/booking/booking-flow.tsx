@@ -31,7 +31,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Card, Skeleton } from "@/components/ui/card";
 import { FieldError, Hint, Input, Label, Textarea } from "@/components/ui/field";
-import { HamdardAvatar, TypingDots } from "@/components/ai/avatar";
+import { HamdardAvatar, HamdardThinking } from "@/components/ai/avatar";
 import { EmergencyBanner } from "@/components/ai/emergency-banner";
 import { DemoButtons } from "@/components/auth/demo-buttons";
 import { initials } from "@/components/layout/user-menu";
@@ -495,7 +495,7 @@ export function BookingFlow({
                       <div className="flex animate-fade-up items-start gap-3">
                         <HamdardAvatar />
                         <div className="rounded-2xl rounded-tl-md bg-surface px-4 py-3 shadow-card ring-1 ring-line">
-                          <TypingDots label={t.ai.typing} />
+                          <HamdardThinking text={t.book.analyzing} />
                         </div>
                       </div>
                     )}
@@ -632,7 +632,7 @@ export function BookingFlow({
                               aria-pressed={s === specialty}
                               onClick={() => chooseSpecialty(s)}
                               className={cn(
-                                "rounded-xl border p-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-200 hover:border-brand-300 hover:bg-brand-50/50 hover:shadow-card active:scale-[0.99]",
+                                "glass-card rounded-xl border p-3 text-left hover:border-brand-300 hover:bg-brand-50 hover:shadow-card active:scale-[0.99]",
                                 s === specialty ? "border-brand-400 bg-brand-50" : "border-line",
                               )}
                             >
@@ -830,11 +830,11 @@ export function BookingFlow({
                                       aria-pressed={selected}
                                       onClick={() => setSlot(s)}
                                       className={cn(
-                                        "relative h-11 rounded-full border text-sm font-semibold tabular-nums transition-[background-color,border-color,color,box-shadow,transform] duration-200 active:scale-[0.97]",
-                                        selected ? "border-ink bg-ink/[0.08] text-ink" : "border-line-strong bg-surface text-ink hover:-translate-y-px hover:border-ink/50 hover:shadow-sm",
+                                        "glass h-11 rounded-full border border-transparent text-sm font-semibold tabular-nums transition-[background-color,color,box-shadow,transform] duration-300 active:scale-[0.97]",
+                                        selected ? "text-white" : "text-ink",
                                       )}
                                     >
-                                      {selected && <m.span layoutId="slot-dot" className="absolute top-1/2 left-3 size-1.5 -translate-y-1/2 rounded-full bg-brand-600" />}
+                                      {selected && <m.span layoutId="slot-dot" className="absolute top-1/2 left-3 size-1.5 -translate-y-1/2 rounded-full bg-white" />}
                                       {formatTime(s.startsAt)}
                                     </button>
                                     {selected && (
