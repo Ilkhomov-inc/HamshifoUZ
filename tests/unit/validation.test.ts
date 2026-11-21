@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { formatPhoneInput } from "@/lib/validation-client";
 import { bookingRequestSchema, explainRequestSchema, nameSchema, normalizePhone, routeRequestSchema } from "@/lib/validation";
 
 describe("input validation", () => {
@@ -9,6 +10,16 @@ describe("input validation", () => {
     expect(normalizePhone("+7 900 123 45 67")).toBeNull();
     expect(normalizePhone("12345")).toBeNull();
     expect(normalizePhone("+998 90 123 45 6a")).toBeNull();
+    expect(normalizePhone("+998 90 123 4")).toBeNull(); // incomplete, must not become +998998901234
+    expect(normalizePhone("+901234567")).toBeNull();
+  });
+
+  it("masks the phone field as +998 XX XXX XX XX", () => {
+    expect(formatPhoneInput("")).toBe("+998 ");
+    expect(formatPhoneInput("+998 901")).toBe("+998 90 1");
+    expect(formatPhoneInput("901234567")).toBe("+998 90 123 45 67");
+    expect(formatPhoneInput("+998901234567")).toBe("+998 90 123 45 67");
+    expect(formatPhoneInput("+998 90 123 45 678")).toBe("+998 90 123 45 67");
   });
 
   it("validates names (Latin and Cyrillic, apostrophes)", () => {

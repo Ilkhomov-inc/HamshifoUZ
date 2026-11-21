@@ -22,7 +22,7 @@ import { SPECIALTIES, type Specialty } from "@/lib/ai/specialties";
 import type { DoctorCard, FreeSlot } from "@/lib/data/catalog";
 import type { RouterOutput } from "@/lib/ai/schemas";
 import { dateKey, formatDate, formatDateKey, formatTime } from "@/lib/time";
-import { MAX_SYMPTOMS, normalizePhone } from "@/lib/validation-client";
+import { MAX_SYMPTOMS, formatPhoneInput, normalizePhone } from "@/lib/validation-client";
 import { cn } from "@/lib/cn";
 import { Button, buttonClass } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -169,7 +169,8 @@ export function BookingFlow({
   useEffect(() => {
     if (!user) return;
     setName((n) => n || (user.isDemo ? "Demo Bemor" : user.name.replace(/\s*\(demo\)/i, "")));
-    setPhone((p) => (p.replace(/\D/g, "").length > 3 ? p : user.isDemo ? "+998 00 000 00 00" : p));
+    // Never prefill a fake number: the patient types their own (older sessions may still hold the old demo filler).
+    setPhone((p) => (p.replace(/\s/g, "") === "+998000000000" ? "+998 " : p));
   }, [user]);
 
   useEffect(() => {
@@ -897,8 +898,15 @@ export function BookingFlow({
                                 inputMode="tel"
                                 autoComplete="tel"
                                 maxLength={20}
+                                placeholder="+998 90 123 45 67"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                onChange={(e) => {
+                                  const next = e.target.value;
+                                  const digits = (v: string) => v.replace(/\D/g, "");
+                                  // Backspace over a space only removes the space; drop the digit before it too.
+                                  const raw = next.length < phone.length && digits(next) === digits(phone) ? `+998${digits(next).slice(3, -1)}` : next;
+                                  setPhone(formatPhoneInput(raw));
+                                }}
                                 aria-invalid={Boolean(fieldErrors.phone)}
                                 aria-describedby="b-phone-hint"
                               />
