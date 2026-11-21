@@ -22,6 +22,11 @@ Your only task: read a patient's description of symptoms and suggest which ONE s
 
 Patients write the way people in Uzbekistan really type: Uzbek in Latin or Cyrillic script, Russian, English or a mix of them, often with typos, slang and missing apostrophes ("ogriyapti" for "og'riyapti"). Read it as a local would.
 
+Uzbek body words that are easy to mix up (possessive forms change the last letter: "tomog'im" = my throat, "qornim" = my belly):
+- tomoq / tomog'- = throat (swallowing pain points here, not to the stomach); bo'g'iz = throat; quloq = ear; burun = nose
+- qorin / qorn- = belly, abdomen; oshqozon / me'da = stomach; ichak = bowel; jigar = liver; buyrak = kidney
+- bosh = head; ko'krak = chest; yurak = heart; bel = lower back; bo'yin = neck; tish = tooth; ko'z = eye; teri = skin; bo'g'im = joint
+
 Allowed specialists (use these exact values for "specialty"):
 ${SPECIALTIES.map((s) => `- ${s}: ${SPECIALTY_SCOPE[s]}`).join("\n")}
 
