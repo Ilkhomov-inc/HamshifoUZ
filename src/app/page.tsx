@@ -14,6 +14,7 @@ import {
   Stethoscope,
   UserRoundSearch,
 } from "lucide-react";
+import Link from "next/link";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { HeroWidget } from "@/components/landing/hero-widget";
@@ -22,6 +23,7 @@ import { HamdardAvatar } from "@/components/ai/avatar";
 import { DemoButtons } from "@/components/auth/demo-buttons";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { demoEnabled } from "@/lib/auth/demo";
 
 const STEP_ICONS = [MessageSquareText, UserRoundSearch, CalendarCheck2, CheckCircle2];
@@ -63,9 +65,11 @@ export default async function LandingPage() {
               <ButtonLink href="/book" variant="warm" size="lg">
                 {L.ctaBook} <ArrowRight aria-hidden className="btn-arrow size-4" />
               </ButtonLink>
-              <ButtonLink href="/explain" variant="outline" size="lg">
-                <FileText aria-hidden className="size-4" /> {L.ctaExplain}
-              </ButtonLink>
+              <LiquidButton asChild size="xl" className="min-h-13 text-base! font-semibold!">
+                <Link href="/explain">
+                  <FileText aria-hidden className="size-4" /> {L.ctaExplain}
+                </Link>
+              </LiquidButton>
             </div>
             <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-2">
               {L.trust.map((item) => (
@@ -97,7 +101,7 @@ export default async function LandingPage() {
                 <span className="flex size-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
                   <Icon aria-hidden className="size-5" />
                 </span>
-                <span className="absolute top-6 right-6 text-sm font-semibold text-line-strong tabular-nums">0{i + 1}</span>
+                <span className="absolute top-6 right-6 text-sm font-semibold text-line-strong tabular-nums">{i + 1}</span>
                 <h3 className="mt-5 font-semibold text-ink">{s.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
               </li>
@@ -113,7 +117,7 @@ export default async function LandingPage() {
           {L.why.map((w, i) => (
             <div key={w.title} className="reveal overflow-hidden rounded-2xl border border-line bg-surface shadow-card" style={{ "--reveal-delay": `${i * 120}ms` } as React.CSSProperties}>
               <div className="p-6">
-                <Badge tone="warm">0{i + 1}</Badge>
+                <Badge tone="warm" className="h-7 min-w-7 justify-center text-sm! font-semibold tabular-nums">{i + 1}</Badge>
                 <h3 className="mt-4 text-lg font-semibold text-ink">{w.title}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-muted">{w.text}</p>
               </div>
