@@ -27,6 +27,7 @@ import { cn } from "@/lib/cn";
 import { Button, buttonClass } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CITIES } from "@/lib/cities";
+import { Segmented } from "@/components/ui/segmented";
 import { Card, Skeleton } from "@/components/ui/card";
 import { FieldError, Hint, Input, Label, Textarea } from "@/components/ui/field";
 import { HamdardAvatar, TypingDots } from "@/components/ai/avatar";
@@ -111,7 +112,7 @@ export function BookingFlow({
   const [showPicker, setShowPicker] = useState(false);
   const [specialty, setSpecialty] = useState<Specialty | null>(initialDoctor?.specialty ?? initialSpecialty);
   const [city, setCity] = useState("");
-  const [doctors, setDoctors] = useState<DoctorCard[] | null>(null);
+  const [allDoctors, setAllDoctors] = useState<DoctorCard[] | null>(null);
   const [doctor, setDoctor] = useState<DoctorCard | null>(initialDoctor);
   const [slots, setSlots] = useState<FreeSlot[] | null>(null);
   const [day, setDay] = useState<string | null>(null);
@@ -198,14 +199,17 @@ export function BookingFlow({
   useEffect(() => {
     if (step !== "specialist" || !specialty) return;
     const ctrl = new AbortController();
-    setDoctors(null);
-    const qs = new URLSearchParams({ specialty, ...(city ? { city } : {}) });
-    fetch(`/api/doctors?${qs}`, { signal: ctrl.signal })
+    setAllDoctors(null);
+    // All cities at once: the city pills show only cities that have this specialist, and switching city is instant.
+    fetch(`/api/doctors?${new URLSearchParams({ specialty })}`, { signal: ctrl.signal })
       .then((r) => (r.ok ? r.json() : { doctors: [] }))
-      .then((d: { doctors: DoctorCard[] }) => setDoctors(d.doctors))
-      .catch(() => !ctrl.signal.aborted && setDoctors([]));
+      .then((d: { doctors: DoctorCard[] }) => setAllDoctors(d.doctors))
+      .catch(() => !ctrl.signal.aborted && setAllDoctors([]));
     return () => ctrl.abort();
-  }, [step, specialty, city]);
+  }, [step, specialty]);
+  const doctorCities = useMemo(() => CITIES.filter((c) => allDoctors?.some((d) => d.clinic.city === c)), [allDoctors]);
+  const activeCity = city && doctorCities.includes(city as (typeof CITIES)[number]) ? city : "";
+  const doctors = useMemo(() => (allDoctors && activeCity ? allDoctors.filter((d) => d.clinic.city === activeCity) : allDoctors), [allDoctors, activeCity]);
 
   // ── Slots ───────────────────────────────────────────────────────────────
   const loadSlots = useCallback(async (doctorId: string, signal?: AbortSignal) => {
@@ -668,21 +672,15 @@ export function BookingFlow({
                     </label>
                   </div>
 
-                  <label className="mt-5 flex items-center gap-2 text-sm">
-                    <MapPin aria-hidden className="size-4 text-muted" />
-                    <span className="sr-only">{t.book.filterCity}</span>
-                    <select
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className="h-10 rounded-full border border-line-strong bg-surface px-4 text-sm font-medium"
-                    >
-                      {["", ...CITIES].map((c) => (
-                        <option key={c || "all"} value={c}>
-                          {t.cities[c || "all"]}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                  {doctorCities.length > 1 && (
+                    <Segmented
+                      label={t.book.filterCity}
+                      value={activeCity}
+                      onChange={setCity}
+                      options={["", ...doctorCities].map((c) => ({ value: c, label: t.cities[c || "all"] }))}
+                      className="mt-5 flex flex-wrap rounded-3xl"
+                    />
+                  )}
 
                   <div className="mt-5 grid gap-3 [&>*]:min-w-0">
                     {doctors === null &&
