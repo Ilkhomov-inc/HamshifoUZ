@@ -319,6 +319,7 @@ const uz = {
     day: "Kun",
     week: "Hafta",
     today: "Bugun",
+    pickDate: "Sanani tanlang",
     prev: "Oldingi",
     next: "Keyingi",
     count: "{count} ta qabul",

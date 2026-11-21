@@ -7,28 +7,44 @@ import { addDays, dateKey, formatDateKey, isoWeekday, monthTitle, weekdayName } 
 import { cn } from "@/lib/cn";
 import { buttonClass } from "@/components/ui/button";
 
-function monthOf(key: string) {
+export function monthOf(key: string) {
   return key.slice(0, 7); // YYYY-MM
 }
 
-function shiftMonth(ym: string, delta: number) {
+export function shiftMonth(ym: string, delta: number) {
   const [y, m] = ym.split("-").map(Number) as [number, number];
   const d = new Date(Date.UTC(y, m - 1 + delta, 1));
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-/** Cal.com-style month grid. Only days with free slots are selectable. */
+/**
+ * Cal.com-style month grid. By default only days with free slots are selectable
+ * and the arrows reach from this month to 14 days ahead (patient booking).
+ * The doctor's date picker passes its own rules.
+ */
 export function Calendar({
   available,
   selected,
   onSelect,
+  isEnabled,
+  monthRange,
+  inRange,
+  today: todayProp,
 }: {
-  available: Map<string, number>;
+  available?: Map<string, number>;
   selected: string | null;
   onSelect: (key: string) => void;
+  /** Which days can be picked. Default: days with free slots in `available`. */
+  isEnabled?: (key: string) => boolean;
+  /** First and last month (YYYY-MM) the arrows can reach. */
+  monthRange?: [string, string];
+  /** Days drawn as part of the picked range, e.g. the selected week. */
+  inRange?: (key: string) => boolean;
+  /** Today's date key; pass the server's value to avoid a time-zone mismatch. */
+  today?: string;
 }) {
   const { locale, t } = useI18n();
-  const today = dateKey(new Date());
+  const today = todayProp ?? dateKey(new Date());
   const lastDay = addDays(today, 14);
   const [month, setMonth] = useState(() => monthOf(selected ?? today));
   useEffect(() => {
@@ -48,8 +64,8 @@ export function Calendar({
   }, [month]);
 
   const title = monthTitle(month, locale);
-  const canPrev = month > monthOf(today);
-  const canNext = month < monthOf(lastDay);
+  const canPrev = month > (monthRange?.[0] ?? monthOf(today));
+  const canNext = month < (monthRange?.[1] ?? monthOf(lastDay));
 
   return (
     <div>
@@ -86,9 +102,9 @@ export function Calendar({
         ))}
         {cells.map((key, i) => {
           if (!key) return <div key={`e${i}`} aria-hidden />;
-          const count = available.get(key) ?? 0;
-          const enabled = count > 0;
+          const enabled = isEnabled ? isEnabled(key) : (available?.get(key) ?? 0) > 0;
           const isSelected = key === selected;
+          const ranged = !isSelected && (inRange?.(key) ?? false);
           const isToday = key === today;
           const label = formatDateKey(key, locale);
           return (
@@ -102,7 +118,8 @@ export function Calendar({
                 className={cn(
                   "relative mx-auto flex aspect-square w-full max-w-11 items-center justify-center rounded-xl text-sm font-medium tabular-nums transition-[background-color,color,transform] duration-200",
                   enabled && "active:scale-95",
-                  enabled && !isSelected && "bg-ink/[0.06] text-ink hover:bg-ink/[0.12]",
+                  enabled && !isSelected && !ranged && "bg-ink/[0.06] text-ink hover:bg-ink/[0.12]",
+                  ranged && "bg-brand-100 text-brand-800 hover:bg-brand-200",
                   isSelected && "scale-105 bg-ink text-white shadow-sm",
                   !enabled && "text-muted/60",
                 )}

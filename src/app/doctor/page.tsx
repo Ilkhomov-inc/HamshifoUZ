@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { doctorSchedule, type AppointmentView } from "@/lib/data/appointments";
@@ -11,9 +11,9 @@ import { fmt, type Dict } from "@/lib/i18n";
 import { dateKeySchema } from "@/lib/validation";
 import { cn } from "@/lib/cn";
 import { Badge } from "@/components/ui/badge";
-import { buttonClass } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { NotDoctor } from "./not-doctor";
+import { DateNav } from "@/components/doctor/date-nav";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getI18n();
@@ -87,7 +87,6 @@ export default async function DoctorPage({ searchParams }: { searchParams: Promi
   const date = dateKeySchema.safeParse(sp.date).success ? sp.date! : today;
   const from = view === "week" ? startOfWeek(date) : date;
   const to = addDays(from, view === "week" ? 7 : 1);
-  const step = view === "week" ? 7 : 1;
   const [list, me] = await Promise.all([doctorSchedule(user.id, from, to), getDoctor(user.id, user.doctorId)]);
 
   const href = (v: string, d: string) => `/doctor?view=${v}&date=${d}`;
@@ -107,7 +106,7 @@ export default async function DoctorPage({ searchParams }: { searchParams: Promi
           </p>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight">{t.doctor.title}</h1>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex flex-wrap items-center gap-2">
           <div className="segmented" role="group" aria-label={`${t.doctor.day} / ${t.doctor.week}`}>
             <Link href={href("day", date)} aria-current={view === "day" ? "page" : undefined} className="segmented-item inline-flex items-center">
               {t.doctor.day}
@@ -116,17 +115,7 @@ export default async function DoctorPage({ searchParams }: { searchParams: Promi
               {t.doctor.week}
             </Link>
           </div>
-          <div className="inline-flex items-center gap-1 rounded-full border border-line bg-surface p-1">
-            <Link href={href(view, addDays(date, -step))} aria-label={t.doctor.prev} className={buttonClass("ghost", "icon-sm")}>
-              <ChevronLeft aria-hidden className="size-4" />
-            </Link>
-            <Link href={href(view, today)} className={buttonClass("ghost", "sm")}>
-              {t.doctor.today}
-            </Link>
-            <Link href={href(view, addDays(date, step))} aria-label={t.doctor.next} className={buttonClass("ghost", "icon-sm")}>
-              <ChevronRight aria-hidden className="size-4" />
-            </Link>
-          </div>
+          <DateNav view={view} date={date} today={today} />
         </div>
       </div>
 

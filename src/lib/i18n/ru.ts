@@ -321,6 +321,7 @@ const ru: Dict = {
     day: "День",
     week: "Неделя",
     today: "Сегодня",
+    pickDate: "Выберите дату",
     prev: "Назад",
     next: "Вперёд",
     count: "Приёмов: {count}",

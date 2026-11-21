@@ -321,6 +321,7 @@ const en: Dict = {
     day: "Day",
     week: "Week",
     today: "Today",
+    pickDate: "Pick a date",
     prev: "Previous",
     next: "Next",
     count: "{count} appointments",

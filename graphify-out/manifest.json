@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "src/app/doctor/page.tsx": {
-    "mtime": 1795181879.2389772,
-    "seen": 1795182091.353605,
-    "ast_hash": "f4b7b8f51a0141cbbf50c9cd10e75a37",
+    "mtime": 1795281909.2444253,
+    "seen": 1795282031.3589902,
+    "ast_hash": "bdc4758adb7401f6f6bd73578b982891",
     "semantic_hash": ""
   },
   "src/app/error.tsx": {
@@ -282,9 +282,9 @@
     "semantic_hash": ""
   },
   "src/components/booking/calendar.tsx": {
-    "mtime": 1794769797.418143,
-    "seen": 1794770270.783916,
-    "ast_hash": "925c74d20a43c13c380891032f36ccb4",
+    "mtime": 1795281877.3177972,
+    "seen": 1795282031.3592231,
+    "ast_hash": "c7681a175c61c686f1f04dee83dbdda3",
     "semantic_hash": ""
   },
   "src/components/booking/ics.ts": {
@@ -534,9 +534,9 @@
     "semantic_hash": ""
   },
   "src/lib/i18n/en.ts": {
-    "mtime": 1795180184.14522,
-    "seen": 1795182091.354422,
-    "ast_hash": "55767475e32741960f53ef5d29f8555e",
+    "mtime": 1795281877.3184652,
+    "seen": 1795282031.360012,
+    "ast_hash": "e7a671fa4c123689555c395731d81548",
     "semantic_hash": ""
   },
   "src/lib/i18n/index.ts": {
@@ -546,9 +546,9 @@
     "semantic_hash": ""
   },
   "src/lib/i18n/ru.ts": {
-    "mtime": 1795180184.1451068,
-    "seen": 1795182091.3544378,
-    "ast_hash": "ae11ffe323fe57b4813bef49dda78475",
+    "mtime": 1795281877.3183792,
+    "seen": 1795282031.360029,
+    "ast_hash": "7b1bdb4468793735c164a35e082d418c",
     "semantic_hash": ""
   },
   "src/lib/i18n/server.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/lib/i18n/uz.ts": {
-    "mtime": 1795180184.1449103,
-    "seen": 1795182091.354455,
-    "ast_hash": "538952852a9c3e10c2c2e1894576f44d",
+    "mtime": 1795281877.3181052,
+    "seen": 1795282031.360045,
+    "ast_hash": "8fd32025ea0410773e35d32d948045ea",
     "semantic_hash": ""
   },
   "src/lib/migrations.ts": {
@@ -819,6 +819,12 @@
     "mtime": 1795281470.7764783,
     "seen": 1795281554.556798,
     "ast_hash": "2185dc88f40a125b9664a82927f45be5",
+    "semantic_hash": ""
+  },
+  "src/components/doctor/date-nav.tsx": {
+    "mtime": 1795281896.721031,
+    "seen": 1795282031.359288,
+    "ast_hash": "23e79495a7bc3e689305e4dc0e95ef12",
     "semantic_hash": ""
   },
   "package-lock.json": {
