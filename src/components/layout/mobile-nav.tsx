@@ -51,7 +51,7 @@ export function MobileNav({ user }: { user: HeaderUser | null }) {
             )}
           </nav>
           <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-4">
-            <LanguageSwitcher />
+            <LanguageSwitcher align="left" />
             {user ? (
               <SignOutButton className={buttonClass("outline", "sm")} />
             ) : (

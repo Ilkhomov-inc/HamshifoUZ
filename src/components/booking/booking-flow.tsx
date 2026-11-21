@@ -28,6 +28,7 @@ import { Button, buttonClass } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CITIES } from "@/lib/cities";
 import { Segmented } from "@/components/ui/segmented";
+import { Dropdown } from "@/components/ui/dropdown";
 import { Card, Skeleton } from "@/components/ui/card";
 import { FieldError, Hint, Input, Label, Textarea } from "@/components/ui/field";
 import { HamdardAvatar, TypingDots } from "@/components/ai/avatar";
@@ -656,20 +657,15 @@ export function BookingFlow({
                       <h2 className="text-2xl font-semibold tracking-tight">{fmt(t.book.doctorsTitle, { specialty: specName(specialty) })}</h2>
                       <p className="text-sm text-muted">{t.specialties[specialty].desc}</p>
                     </div>
-                    <label className="text-sm">
-                      <span className="sr-only">{t.book.pickSpecialty}</span>
-                      <select
-                        value={specialty}
-                        onChange={(e) => setSpecialty(e.target.value as Specialty)}
-                        className="h-10 rounded-full border border-line-strong bg-surface px-4 text-sm font-medium"
-                      >
-                        {SPECIALTIES.map((s) => (
-                          <option key={s} value={s}>
-                            {specName(s)}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                    <Dropdown
+                      value={specialty}
+                      onChange={setSpecialty}
+                      label={t.book.pickSpecialty}
+                      icon={<Stethoscope aria-hidden />}
+                      align="end"
+                      options={SPECIALTIES.map((s) => ({ value: s, label: specName(s), hint: t.specialties[s].desc }))}
+                      className="self-start sm:self-auto"
+                    />
                   </div>
 
                   {doctorCities.length > 1 && (
