@@ -21,6 +21,12 @@ export function aiModel(): string {
   return process.env.ANTHROPIC_MODEL?.trim() || "claude-haiku-5-5";
 }
 
+/** Claude reasoning depth. "low" is fast and enough for triage/explanations; ANTHROPIC_EFFORT overrides. */
+export function aiEffort(): "low" | "medium" | "high" {
+  const e = process.env.ANTHROPIC_EFFORT?.trim().toLowerCase();
+  return e === "medium" || e === "high" ? e : "low";
+}
+
 export function aiConfigured(): boolean {
   return Boolean(aiProvider() === "gemini" ? process.env.GEMINI_API_KEY : process.env.ANTHROPIC_API_KEY);
 }

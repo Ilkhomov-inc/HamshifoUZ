@@ -1,6 +1,6 @@
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
-import { aiConfigured, aiMock, aiModel, aiProvider, getAnthropic, isTransportError } from "./client";
+import { aiConfigured, aiMock, aiEffort, aiModel, aiProvider, getAnthropic, isTransportError } from "./client";
 import { geminiJson } from "./gemini";
 import { detectEmergency, type EmergencyResult } from "./emergency";
 import { keywordRoute } from "./keyword-router";
@@ -51,9 +51,9 @@ export const callRouterModel: RouterModelCall = async ({ text, lang, clarificati
   const response = await getAnthropic().messages.parse(
     {
       model: aiModel(),
-      max_tokens: 1024,
+      max_tokens: 4096,
       system: [{ type: "text", text: ROUTER_SYSTEM, cache_control: { type: "ephemeral" } }],
-      output_config: { format: zodOutputFormat(RouterApiSchema), effort: "low" },
+      output_config: { format: zodOutputFormat(RouterApiSchema), effort: aiEffort() },
       messages: [{ role: "user", content: routerUserMessage(text, lang, clarifications) }],
     },
     { signal, timeout: 15_000, maxRetries: 0 },

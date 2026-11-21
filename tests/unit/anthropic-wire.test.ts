@@ -88,7 +88,7 @@ describe("Anthropic SDK wire format", () => {
     // SDK 1.x sends the key as a Bearer token (older versions used x-api-key)
     expect(headers["x-api-key"] ?? headers["authorization"]).toMatch(/sk-test-not-real/);
     expect(body.model).toBe("claude-haiku-5-5");
-    expect(body.max_tokens).toBeLessThanOrEqual(1024);
+    expect(body.max_tokens).toBeLessThanOrEqual(4096);
     expect(body.temperature).toBeUndefined();
     expect(body.output_config.effort).toBe("low");
     expect(body.output_config.format.type).toBe("json_schema");
@@ -139,7 +139,7 @@ describe("Anthropic SDK wire format", () => {
     const { body } = captured.at(-1)!;
     expect(body.stream).toBe(true);
     expect(body.model).toBe("claude-haiku-5-5");
-    expect(body.max_tokens).toBeLessThanOrEqual(1500);
+    expect(body.max_tokens).toBeLessThanOrEqual(4096);
     expect(body.messages[0].role).toBe("user");
     expect(body.messages[0].content.at(-1).text).toContain("<prescription>");
     expect(body.messages[0].content.at(-1).text).toContain("Russian");

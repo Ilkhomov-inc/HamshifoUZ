@@ -1,5 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
-import { aiConfigured, aiMock, aiModel, aiProvider, getAnthropic } from "./client";
+import { aiConfigured, aiMock, aiEffort, aiModel, aiProvider, getAnthropic } from "./client";
 import { geminiStream, type GeminiFinal, type GeminiPart } from "./gemini";
 import { MarkerFilter } from "./marker";
 import { EXPLAINER_SYSTEM, explainerUserText, type Clarification } from "./prompts";
@@ -206,9 +206,9 @@ export async function* explain(input: ExplainInput, signal?: AbortSignal): Async
     const stream = getAnthropic().messages.stream(
       {
         model: aiModel(),
-        max_tokens: 1500,
+        max_tokens: 4096,
         system: [{ type: "text", text: EXPLAINER_SYSTEM, cache_control: { type: "ephemeral" } }],
-        output_config: { effort: "low" },
+        output_config: { effort: aiEffort() },
         messages: buildMessages(input, topics, lang),
       },
       { signal, timeout: 30_000, maxRetries: 0 },
